@@ -26,11 +26,13 @@ export interface NameStructure {
 
 export interface InterfaceDescription {
   name: string
-  typeMap: object
+  typeMap: object,
+  userOptions: Options
 }
 
 export interface Options {
-  rootName: string
+  rootName: string,
+  export: boolean
 }
 
 export interface KeyMetaData {

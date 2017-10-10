@@ -11,7 +11,8 @@ shim()
 
 export default function JsonToTS(json: any, userOptions?: Options): string[] {
   const defaultOptions: Options = {
-    rootName: 'RootObject'
+    rootName: 'RootObject',
+    export: true
   }
   const options = {
     ...defaultOptions,
@@ -40,7 +41,7 @@ export default function JsonToTS(json: any, userOptions?: Options): string[] {
 
   const names = getNames(typeStructure, options.rootName)
 
-  return getInterfaceDescriptions(typeStructure, names)
+  return getInterfaceDescriptions(typeStructure, names, userOptions)
     .map(getInterfaceStringFromDescription)
 }
 

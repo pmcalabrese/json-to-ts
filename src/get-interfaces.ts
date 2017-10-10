@@ -6,7 +6,6 @@ function isKeyNameValid(keyName: string) {
   return regex.test(keyName)
 }
 
-
 function parseKeyMetaData(key: string): KeyMetaData {
   const isOptional = key.endsWith('--?')
 
@@ -92,7 +91,7 @@ function replaceTypeObjIdsWithNames (
     )
 }
 
-export function getInterfaceStringFromDescription({name, typeMap}: InterfaceDescription): string {
+export function getInterfaceStringFromDescription({name, typeMap, userOptions}: InterfaceDescription): string {
 
   const stringTypeMap = Object.entries(typeMap)
     .map(([key, name]) => `  ${key}: ${name};\n`)
@@ -101,7 +100,7 @@ export function getInterfaceStringFromDescription({name, typeMap}: InterfaceDesc
       ''
     )
 
-  let interfaceString =  `interface ${name} {\n`
+  let interfaceString =  `${userOptions.export ? 'export' :''} interface ${name} {\n`
       interfaceString +=  stringTypeMap
       interfaceString += '}'
 
@@ -110,20 +109,22 @@ export function getInterfaceStringFromDescription({name, typeMap}: InterfaceDesc
 
 export function getInterfaceDescriptions(
   typeStructure: TypeStructure,
-  names: NameEntry[]
+  names: NameEntry[],
+  userOptions
 ): InterfaceDescription[] {
 
-  return names
+  const r = names
     .map(({id, name}) => {
       const typeDescription = findTypeById(id, typeStructure.types)
 
       if (typeDescription.typeObj) {
         const typeMap = replaceTypeObjIdsWithNames(typeDescription.typeObj, names)
-        return {name, typeMap}
+        return {name, typeMap, userOptions}
       } else {
         return null
       }
 
     })
-    .filter(_ => _ !== null)
+    .filter(_ => _ !== null);
+    return r;
 }
